@@ -1,12 +1,16 @@
 import { Controller, Get, Param } from '@nestjs/common'
-import { ApiOkResponse, ApiOperation } from '@nestjs/swagger'
+import {
+	ApiNotFoundResponse,
+	ApiOkResponse,
+	ApiOperation,
+} from '@nestjs/swagger'
 
 import { PlanResponse } from './dto'
 import { PlansService } from './plans.service'
 
 @Controller('plans')
 export class PlansController {
-	constructor(private readonly plansService: PlansService) {}
+	public constructor(private readonly plansService: PlansService) {}
 
 	@ApiOperation({
 		summary: 'Get all plans',
@@ -29,6 +33,9 @@ export class PlansController {
 	@ApiOkResponse({
 		description: 'Plan',
 		type: PlanResponse,
+	})
+	@ApiNotFoundResponse({
+		description: 'Plan not found',
 	})
 	@Get(':id')
 	async getById(@Param('id') id: string) {

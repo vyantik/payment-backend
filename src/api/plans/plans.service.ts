@@ -8,6 +8,7 @@ const planSelectOptions = {
 	features: true,
 	monthlyPrice: true,
 	yearlyPrice: true,
+	isFeatured: true,
 }
 
 @Injectable()

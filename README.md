@@ -10,7 +10,7 @@ bun install --frozen-lockfile
 
 Create a `.env` file in the root of the project and add the following variables:
 
-````bash
+```bash
 NODE_ENV='development'
 
 # HTTP
@@ -35,10 +35,11 @@ POSTGRES_PORT=5433
 POSTGRES_DATABASE='payment-backend'
 POSTGRES_URI='postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@
 ${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}'
-```bash
+```
 
 ## Running the app
 
+```bash
 # development
 $ bun run start
 
@@ -47,7 +48,7 @@ $ bun run start:dev
 
 # production mode
 $ bun run start:prod
-````
+```
 
 ## Test
 

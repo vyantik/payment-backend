@@ -1,4 +1,4 @@
-**Payment API**
+# Payment API
 
 ## Installation
 

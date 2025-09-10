@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common'
+import { Controller, Get, HttpCode, HttpStatus, Param } from '@nestjs/common'
 import {
 	ApiNotFoundResponse,
 	ApiOkResponse,
@@ -10,7 +10,7 @@ import { PlansService } from './plans.service'
 
 @Controller('plans')
 export class PlansController {
-	public constructor(private readonly plansService: PlansService) {}
+	public constructor(private readonly plansService: PlansService) { }
 
 	@ApiOperation({
 		summary: 'Get all plans',
@@ -37,6 +37,7 @@ export class PlansController {
 	@ApiNotFoundResponse({
 		description: 'Plan not found',
 	})
+	@HttpCode(HttpStatus.OK)
 	@Get(':id')
 	async getById(@Param('id') id: string) {
 		return await this.plansService.getById(id)

@@ -1,8 +1,9 @@
 import { Controller, Get } from '@nestjs/common'
-import { ApiOperation } from '@nestjs/swagger'
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger'
 import type { User } from '@prisma/client'
 import { Authorized, Protected } from 'src/common/decorators'
 
+import { PaymentHistoryResponse } from './dto/payment-history.dto'
 import { PaymentsService } from './payments.service'
 
 @Controller('payments')
@@ -12,6 +13,10 @@ export class PaymentsController {
 	@ApiOperation({
 		summary: 'Get payment history',
 		description: 'Get payment history for a user',
+	})
+	@ApiOkResponse({
+		description: 'Payment history',
+		type: PaymentHistoryResponse,
 	})
 	@Protected()
 	@Get()

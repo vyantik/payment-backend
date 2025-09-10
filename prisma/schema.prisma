@@ -14,7 +14,7 @@ model User {
   email    String @unique @db.VarChar(255)
   password String @db.VarChar(255)
 
-  transactions Transaction[]
+  transactions Transactions[]
   subscription UserSubscription?
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -52,7 +52,7 @@ model UserSubscription {
   startDate DateTime? @map("start_date")
   endDate   DateTime? @map("end_date")
 
-  transactions Transaction[]
+  transactions Transactions[]
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique @map("user_id")
@@ -66,7 +66,7 @@ model UserSubscription {
   @@map("user_subscriptions")
 }
 
-model Transaction {
+model Transactions {
   id String @id @default(nanoid())
 
   amount Int

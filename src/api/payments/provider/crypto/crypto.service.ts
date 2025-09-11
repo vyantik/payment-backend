@@ -1,7 +1,8 @@
 import { HttpService } from '@nestjs/axios'
-import { Injectable } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { BillingPeriod, Plan, Transactions } from '@prisma/client'
+import { Plan, Transactions } from '@prisma/client'
+import { createHash, createHmac } from 'crypto'
 import { firstValueFrom } from 'rxjs'
 
 import { CRYPTO_PAY_URL } from '../../constants'
@@ -26,10 +27,29 @@ export class CryptoService {
     this.CRYPTO_PAY_TOKEN =
       this.configService.getOrThrow<string>('CRYPTO_PAY_TOKEN')
     this.CRYPTO_PAY_URL = CRYPTO_PAY_URL
-    // this.CRYPTO_PAY_INVOICE_URL = this.configService.getOrThrow<string>(
-    //   'CRYPTO_PAY_INVOICE_URL',
-    // )
-    this.CRYPTO_PAY_INVOICE_URL = 'https://sitetrialbox.ru/'
+    this.CRYPTO_PAY_INVOICE_URL = this.configService.getOrThrow<string>(
+      'CRYPTO_PAY_INVOICE_URL',
+    )
+  }
+
+  public verifyWebhook(rawBody: Buffer<ArrayBufferLike>, sig: string) {
+    const secret = createHash('sha256')
+      .update(this.CRYPTO_PAY_TOKEN)
+      .digest()
+
+    const hmac = createHmac('sha256', secret).update(rawBody).digest('hex')
+
+    if (hmac !== sig) throw new UnauthorizedException('Invalid signature')
+
+    return true
+  }
+
+  public isFreshRequest(body: any, maxAgeSeconds: number = 300) {
+    const requestDate = new Date(body.request_date).getTime()
+
+    const now = new Date().getTime()
+
+    return now - requestDate <= maxAgeSeconds * 1000
   }
 
   public async create(plan: Plan, transaction: Transactions) {

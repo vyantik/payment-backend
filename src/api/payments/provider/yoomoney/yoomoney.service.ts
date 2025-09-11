@@ -20,19 +20,10 @@ export class YoomoneyService {
     )
   }
 
-  public async create(
-    plan: Plan,
-    transaction: Transactions,
-    billingPeriod: BillingPeriod,
-  ) {
-    const amount =
-      billingPeriod === BillingPeriod.MONTHLY
-        ? plan.monthlyPrice
-        : plan.yearlyPrice
-
+  public async create(plan: Plan, transaction: Transactions) {
     const payment = await this.yookassaService.createPayment({
       amount: {
-        value: amount,
+        value: transaction.amount,
         currency: CurrencyEnum.RUB,
       },
       description: `Payment for subscription on ${plan.title}`,

@@ -71,8 +71,8 @@ model Transactions {
 
   amount Int
 
-  PaymentProvider   PaymentProvider   @map("payment_provider")
-  TransactionStatus TransactionStatus @default(PENDING) @map("transaction_status")
+  paymentProvider   PaymentProvider   @map("payment_provider")
+  transactionStatus TransactionStatus @default(PENDING) @map("transaction_status")
 
   externalId   String? @map("external_id")
   providerMeta Json?   @map("provider_meta")

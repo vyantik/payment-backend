@@ -8,4 +8,4 @@ import { UsersModule } from './users/users.module'
 @Module({
 	imports: [AuthModule, UsersModule, PlansModule, PaymentsModule],
 })
-export class ApiModule {}
+export class ApiModule { }

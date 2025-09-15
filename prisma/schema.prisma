@@ -47,7 +47,7 @@ model Plan {
 model UserSubscription {
   id String @id @default(nanoid())
 
-  status SubscriptionStatus @default(ACTIVE) @map("status")
+  status SubscriptionStatus @default(PENDING_PAYMENT) @map("status")
 
   startDate DateTime? @map("start_date")
   endDate   DateTime? @map("end_date")
@@ -93,8 +93,8 @@ model Transactions {
 
 enum PaymentProvider {
   YOOKASSA
-  Stripe
-  CryptoPay
+  STRIPE
+  CRYPTOPAY
 
   @@map("payment_providers")
 }
@@ -103,7 +103,6 @@ enum TransactionStatus {
   PENDING
   SUCCESS
   FAILED
-  CANCELLED
 
   @@map("transaction_status")
 }

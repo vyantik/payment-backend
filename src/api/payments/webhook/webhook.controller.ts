@@ -1,45 +1,55 @@
 import {
-  Body,
-  Controller,
-  Headers,
-  Logger,
-  Post,
-  type RawBodyRequest,
-  Req,
-  UnauthorizedException,
+	Body,
+	Controller,
+	Headers,
+	HttpCode,
+	HttpStatus,
+	Ip,
+	Logger,
+	Post,
+	type RawBodyRequest,
+	Req,
+	UnauthorizedException,
 } from '@nestjs/common'
-import { Request } from 'express'
+import type { Request } from 'express'
 
+import { YookassaWebhookDto } from './dto'
 import { WebhookService } from './webhook.service'
 
 @Controller('webhook')
 export class WebhookController {
-  private readonly logger = new Logger(WebhookController.name)
+	private readonly logger = new Logger(WebhookController.name)
 
-  public constructor(private readonly webhookService: WebhookService) { }
+	public constructor(private readonly webhookService: WebhookService) { }
 
-  @Post('yookassa')
-  public async handleYookassa(
-    @Req() req: RawBodyRequest<Request>,
-    @Headers('crypto-pay-api-signature') sig: string,
-  ) {
-    this.logger.log(`WebhookController.handleYookassa`)
-  }
+	@HttpCode(HttpStatus.OK)
+	@Post('yookassa')
+	public async handleYookassa(
+		@Body() dto: YookassaWebhookDto,
+		@Ip() ip: string,
+	) {
+		this.logger.log(
+			`WebhookController.handleYookassa ${JSON.stringify(dto)}`,
+		)
+		this.webhookService.handleYookassa(dto, ip)
+	}
 
-  @Post('crypto')
-  public async handleCrypto(
-    @Req() req: RawBodyRequest<Request>,
-    @Headers('crypto-pay-api-signature') sig: string,
-  ) {
-    this.logger.log(`WebhookController.handleCrypto ${sig} ${req.rawBody}`)
-    if (!sig) {
-      throw new UnauthorizedException('Signature is missing')
-    }
+	@HttpCode(HttpStatus.OK)
+	@Post('crypto')
+	public async handleCrypto(
+		@Req() req: RawBodyRequest<Request>,
+		@Headers('crypto-pay-api-signature') sig: string,
+	) {
+		this.logger.log(`WebhookController.handleCrypto ${sig} ${req.rawBody}`)
 
-    if (!req.rawBody) {
-      throw new UnauthorizedException('Raw body is missing')
-    }
+		if (!sig) {
+			throw new UnauthorizedException('Signature is missing')
+		}
 
-    return await this.webhookService.handleCrypto(req.rawBody, sig)
-  }
+		if (!req.rawBody) {
+			throw new UnauthorizedException('Raw body is missing')
+		}
+
+		return await this.webhookService.handleCrypto(req.rawBody!, sig)
+	}
 }

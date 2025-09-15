@@ -22,7 +22,7 @@ export class InitPaymentsRequest {
 	@IsEnum(PaymentProvider)
 	@ApiProperty({
 		description: 'Transaction payment provider',
-		example: PaymentProvider.Stripe,
+		example: PaymentProvider.YOOKASSA,
 		enum: PaymentProvider,
 	})
 	public provider: PaymentProvider

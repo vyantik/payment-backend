@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config'
 
 import { ApiModule } from './api/api.module'
 import { InfraModule } from './infra/infra.module'
+import { LibsModule } from './libs/libs.module'
 
 @Module({
 	imports: [
@@ -11,6 +12,7 @@ import { InfraModule } from './infra/infra.module'
 		}),
 		InfraModule,
 		ApiModule,
+		LibsModule,
 	],
 })
-export class AppModule {}
+export class AppModule { }

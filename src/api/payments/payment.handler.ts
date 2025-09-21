@@ -16,7 +16,7 @@ export class PaymentHandler {
 	public constructor(
 		private readonly prismaService: PrismaService,
 		private readonly mailService: MailService,
-	) {}
+	) { }
 
 	public async processResult({
 		transactionId,
@@ -97,7 +97,7 @@ export class PaymentHandler {
 				},
 			})
 
-			await this.mailService.sendPaymentSuccessMail(
+			this.mailService.sendPaymentSuccessMail(
 				subscription.user,
 				transaction,
 			)

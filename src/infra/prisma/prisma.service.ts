@@ -18,7 +18,7 @@ export class PrismaService
 			await this.$disconnect()
 		} catch (err) {
 			this.logger.error(
-				`Failed to disconnect from database: ${err.message}`,
+				`❌ Failed to disconnect from database: ${err.message}`,
 			)
 			throw err
 		}
@@ -27,9 +27,11 @@ export class PrismaService
 	public async onModuleInit() {
 		try {
 			await this.$connect()
-			this.logger.log('Database connected')
+			this.logger.log('✅ Database connected')
 		} catch (err) {
-			this.logger.error(`Failed to connect to database: ${err.message}`)
+			this.logger.error(
+				`❌ Failed to connect to database: ${err.message}`,
+			)
 			throw err
 		}
 	}

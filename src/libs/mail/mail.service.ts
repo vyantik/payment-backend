@@ -9,10 +9,11 @@ import { PaymentSuccessTemplate } from './templates'
 export class MailService {
 	private readonly logger = new Logger(MailService.name)
 
-	public constructor(private readonly mailerService: MailerService) {}
+	public constructor(private readonly mailerService: MailerService) { }
 
 	public async sendPaymentSuccessMail(user: User, transaction: Transactions) {
 		const html = await render(PaymentSuccessTemplate({ transaction }))
+		this.logger.log(`Sending payment success mail to ${user.email}`)
 
 		await this.sendMail({
 			to: user.email,

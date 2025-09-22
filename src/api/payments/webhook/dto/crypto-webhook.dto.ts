@@ -1,131 +1,131 @@
 import { Type } from 'class-transformer'
 import {
-  IsArray,
-  IsBoolean,
-  IsEnum,
-  IsNumber,
-  IsNumberString,
-  IsOptional,
-  IsString,
-  ValidateNested,
+	IsArray,
+	IsBoolean,
+	IsEnum,
+	IsNumber,
+	IsNumberString,
+	IsOptional,
+	IsString,
+	ValidateNested,
 } from 'class-validator'
 
 import { AcceptedCryptoAsset } from '../../provider/crypto/interfaces/common.interface'
 import {
-  Currency,
-  InvoiceStatus,
+	Currency,
+	InvoiceStatus,
 } from '../../provider/crypto/interfaces/create-invoice.interface'
 
 export enum UpdateType {
-  INVOICE_PAID = 'invoice_paid',
+	INVOICE_PAID = 'invoice_paid',
 }
 
 export class CryptoPayload {
-  @IsNumber()
-  public invoice_id: number
+	@IsNumber()
+	public invoice_id: number
 
-  @IsString()
-  public hash: string
+	@IsString()
+	public hash: string
 
-  @IsEnum(Currency)
-  public currency_type: Currency
+	@IsEnum(Currency)
+	public currency_type: Currency
 
-  @IsString()
-  public fiat: string
+	@IsString()
+	public fiat: string
 
-  @IsNumberString()
-  public amount: string
+	@IsNumberString()
+	public amount: string
 
-  @IsString()
-  public paid_asset: string
+	@IsString()
+	public paid_asset: string
 
-  @IsNumberString()
-  public paid_amount: string
+	@IsNumberString()
+	public paid_amount: string
 
-  @IsArray()
-  @IsEnum(AcceptedCryptoAsset, { each: true })
-  public accepted_assets: AcceptedCryptoAsset[]
+	@IsArray()
+	@IsEnum(AcceptedCryptoAsset, { each: true })
+	public accepted_assets: AcceptedCryptoAsset[]
 
-  @IsString()
-  public fee_asset: string
+	@IsString()
+	public fee_asset: string
 
-  @IsNumberString()
-  public fee_amount: string
+	@IsNumberString()
+	public fee_amount: string
 
-  @IsNumberString()
-  public fee: string
+	@IsNumberString()
+	public fee: string
 
-  @IsNumberString()
-  public fee_in_usd: string
+	@IsNumberString()
+	public fee_in_usd: string
 
-  @IsString()
-  public pay_url: string
+	@IsString()
+	public pay_url: string
 
-  @IsString()
-  public bot_invoice_url: string
+	@IsString()
+	public bot_invoice_url: string
 
-  @IsString()
-  public mini_app_invoice_url: string
+	@IsString()
+	public mini_app_invoice_url: string
 
-  @IsString()
-  public web_app_invoice_url: string
+	@IsString()
+	public web_app_invoice_url: string
 
-  @IsString()
-  public description: string
+	@IsString()
+	public description: string
 
-  @IsEnum(InvoiceStatus)
-  public status: InvoiceStatus
+	@IsEnum(InvoiceStatus)
+	public status: InvoiceStatus
 
-  @IsString()
-  public created_at: string
+	@IsString()
+	public created_at: string
 
-  @IsBoolean()
-  public allow_comments: boolean
+	@IsBoolean()
+	public allow_comments: boolean
 
-  @IsBoolean()
-  public allow_anonymous: boolean
+	@IsBoolean()
+	public allow_anonymous: boolean
 
-  @IsNumberString()
-  public paid_usd_rate: string
+	@IsNumberString()
+	public paid_usd_rate: string
 
-  @IsNumberString()
-  public usd_rate: string
+	@IsNumberString()
+	public usd_rate: string
 
-  @IsOptional()
-  @IsString()
-  public paid_at?: string
+	@IsOptional()
+	@IsString()
+	public paid_at?: string
 
-  @IsBoolean()
-  public paid_anonymously: boolean
+	@IsBoolean()
+	public paid_anonymously: boolean
 
-  @IsOptional()
-  @IsString()
-  public hidden_message?: string
+	@IsOptional()
+	@IsString()
+	public hidden_message?: string
 
-  @IsOptional()
-  @IsString()
-  public payload?: string
+	@IsOptional()
+	@IsString()
+	public payload?: string
 
-  @IsOptional()
-  @IsString()
-  public paid_btn_name?: string
+	@IsOptional()
+	@IsString()
+	public paid_btn_name?: string
 
-  @IsOptional()
-  @IsString()
-  public paid_btn_url?: string
+	@IsOptional()
+	@IsString()
+	public paid_btn_url?: string
 }
 
 export class CryptoWebhookDto {
-  @IsNumberString()
-  public update_id: string | number
+	@IsNumberString()
+	public update_id: string | number
 
-  @IsEnum(UpdateType)
-  public update_type: UpdateType
+	@IsEnum(UpdateType)
+	public update_type: UpdateType
 
-  @IsString()
-  public request_date: string
+	@IsString()
+	public request_date: string
 
-  @ValidateNested()
-  @Type(() => CryptoPayload)
-  public payload: CryptoPayload
+	@ValidateNested()
+	@Type(() => CryptoPayload)
+	public payload: CryptoPayload
 }

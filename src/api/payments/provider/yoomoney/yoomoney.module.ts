@@ -6,13 +6,13 @@ import { getYoomoneyConfig } from 'src/config'
 import { YoomoneyService } from './yoomoney.service'
 
 @Module({
-  imports: [
-    YookassaModule.forRootAsync({
-      useFactory: getYoomoneyConfig,
-      inject: [ConfigService],
-    }),
-  ],
-  providers: [YoomoneyService],
-  exports: [YoomoneyService],
+	imports: [
+		YookassaModule.forRootAsync({
+			useFactory: getYoomoneyConfig,
+			inject: [ConfigService],
+		}),
+	],
+	providers: [YoomoneyService],
+	exports: [YoomoneyService],
 })
-export class YoomoneyModule { }
+export class YoomoneyModule {}

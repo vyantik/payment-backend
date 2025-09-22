@@ -12,7 +12,7 @@ export class PaymentsService {
 		private readonly prismaService: PrismaService,
 		private readonly yoomoneyService: YoomoneyService,
 		private readonly cryptoService: CryptoService,
-	) { }
+	) {}
 
 	public async getHistory(user: User) {
 		const payments = await this.prismaService.transactions.findMany({

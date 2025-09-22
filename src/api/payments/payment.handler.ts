@@ -16,7 +16,7 @@ export class PaymentHandler {
 	public constructor(
 		private readonly prismaService: PrismaService,
 		private readonly mailService: MailService,
-	) { }
+	) {}
 
 	public async processResult({
 		transactionId,
@@ -70,7 +70,7 @@ export class PaymentHandler {
 				baseDate = new Date(subscription.endDate)
 			}
 
-			let newEndDate = new Date(baseDate)
+			const newEndDate = new Date(baseDate)
 
 			if (transaction.billingPeriod === BillingPeriod.YEARLY)
 				newEndDate.setFullYear(newEndDate.getFullYear() + 1)

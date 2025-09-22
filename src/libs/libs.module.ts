@@ -6,12 +6,12 @@ import { getBullMQConfig } from 'src/config'
 import { MailModule } from './mail/mail.module'
 
 @Module({
-  imports: [
-    BullModule.forRootAsync({
-      useFactory: getBullMQConfig,
-      inject: [ConfigService],
-    }),
-    MailModule,
-  ],
+	imports: [
+		BullModule.forRootAsync({
+			useFactory: getBullMQConfig,
+			inject: [ConfigService],
+		}),
+		MailModule,
+	],
 })
-export class LibsModule { }
+export class LibsModule {}

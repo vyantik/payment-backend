@@ -84,7 +84,7 @@ export class AuthService {
 	}
 
 	public async logout(res: Response) {
-		await this.setCookies(res, 'refreshToken', new Date(0))
+		this.setCookies(res, 'refreshToken', new Date(0))
 	}
 
 	public async refresh(req: Request, res: Response) {
@@ -116,7 +116,7 @@ export class AuthService {
 		const { accessToken, refreshToken, refreshTokenExpires } =
 			await this.generateToken(user)
 
-		await this.setCookies(res, refreshToken, refreshTokenExpires)
+		this.setCookies(res, refreshToken, refreshTokenExpires)
 
 		return { accessToken }
 	}
@@ -144,7 +144,7 @@ export class AuthService {
 		}
 	}
 
-	private async setCookies(res: Response, value: string, expires: Date) {
+	private setCookies(res: Response, value: string, expires: Date) {
 		res.cookie('refreshToken', value, {
 			httpOnly: true,
 			domain: this.COOKIES_DOMAIN,

@@ -20,7 +20,7 @@ import { WebhookService } from './webhook.service'
 export class WebhookController {
 	private readonly logger = new Logger(WebhookController.name)
 
-	public constructor(private readonly webhookService: WebhookService) { }
+	public constructor(private readonly webhookService: WebhookService) {}
 
 	@HttpCode(HttpStatus.OK)
 	@Post('yookassa')
@@ -31,7 +31,7 @@ export class WebhookController {
 		this.logger.log(
 			`WebhookController.handleYookassa ${JSON.stringify(dto)}`,
 		)
-		this.webhookService.handleYookassa(dto, ip)
+		await this.webhookService.handleYookassa(dto, ip)
 	}
 
 	@HttpCode(HttpStatus.OK)
@@ -50,6 +50,6 @@ export class WebhookController {
 			throw new UnauthorizedException('Raw body is missing')
 		}
 
-		return await this.webhookService.handleCrypto(req.rawBody!, sig)
+		return await this.webhookService.handleCrypto(req.rawBody, sig)
 	}
 }

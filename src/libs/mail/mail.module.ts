@@ -9,16 +9,16 @@ import { MailService } from './mail.service'
 
 @Global()
 @Module({
-  imports: [
-    MailerModule.forRootAsync({
-      useFactory: getMailerConfig,
-      inject: [ConfigService],
-    }),
-    BullModule.registerQueue({
-      name: 'mail',
-    }),
-  ],
-  providers: [MailService, MailProcessor],
-  exports: [MailService],
+	imports: [
+		MailerModule.forRootAsync({
+			useFactory: getMailerConfig,
+			inject: [ConfigService],
+		}),
+		BullModule.registerQueue({
+			name: 'mail',
+		}),
+	],
+	providers: [MailService, MailProcessor],
+	exports: [MailService],
 })
-export class MailModule { }
+export class MailModule {}

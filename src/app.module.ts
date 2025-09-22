@@ -15,4 +15,4 @@ import { LibsModule } from './libs/libs.module'
 		LibsModule,
 	],
 })
-export class AppModule { }
+export class AppModule {}

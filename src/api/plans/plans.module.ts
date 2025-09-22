@@ -7,4 +7,4 @@ import { PlansService } from './plans.service'
 	controllers: [PlansController],
 	providers: [PlansService],
 })
-export class PlansModule { }
+export class PlansModule {}

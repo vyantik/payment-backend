@@ -8,8 +8,8 @@ import { WebhookController } from './webhook.controller'
 import { WebhookService } from './webhook.service'
 
 @Module({
-  imports: [CryptoModule, YoomoneyModule],
-  controllers: [WebhookController],
-  providers: [WebhookService, PaymentHandler],
+	imports: [CryptoModule, YoomoneyModule],
+	controllers: [WebhookController],
+	providers: [WebhookService, PaymentHandler],
 })
-export class WebhookModule { }
+export class WebhookModule {}

@@ -15,7 +15,7 @@ import { PaymentsService } from './payments.service'
 
 @Controller('payments')
 export class PaymentsController {
-	public constructor(private readonly paymentsService: PaymentsService) { }
+	public constructor(private readonly paymentsService: PaymentsService) {}
 
 	@ApiOperation({
 		summary: 'Get payment history',
@@ -51,5 +51,5 @@ export class PaymentsController {
 
 	@HttpCode(HttpStatus.OK)
 	@Post('webhook')
-	public async webhook(@Body() body: any) { }
+	public async webhook(@Body() body: any) {}
 }

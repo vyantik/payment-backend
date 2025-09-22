@@ -13,7 +13,7 @@ const planSelectOptions = {
 
 @Injectable()
 export class PlansService {
-	public constructor(private readonly prismaService: PrismaService) { }
+	public constructor(private readonly prismaService: PrismaService) {}
 
 	public async getAll() {
 		return await this.prismaService.plan.findMany({

@@ -10,7 +10,7 @@ import { PlansService } from './plans.service'
 
 @Controller('plans')
 export class PlansController {
-	public constructor(private readonly plansService: PlansService) { }
+	public constructor(private readonly plansService: PlansService) {}
 
 	@ApiOperation({
 		summary: 'Get all plans',

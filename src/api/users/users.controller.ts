@@ -8,7 +8,7 @@ import { UsersService } from './users.service'
 
 @Controller('users')
 export class UsersController {
-	public constructor(private readonly usersService: UsersService) { }
+	public constructor(private readonly usersService: UsersService) {}
 
 	@ApiOperation({ summary: 'Get user details' })
 	@ApiOkResponse({ description: 'User details', type: UserResponse })

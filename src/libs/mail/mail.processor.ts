@@ -23,14 +23,17 @@ export class MailProcessor extends WorkerHost {
     const { email, subject, html } = job.data
 
     try {
+      this.logger.log(`⏳ Sending mail to ${email}`)
       await this.mailService.sendMail({
         to: email,
         subject,
         html,
       })
-      this.logger.log(`Successfully sent mail to ${email}`)
+      this.logger.log(`✅ Mail sent to ${email}`)
     } catch (error) {
-      this.logger.error(`Failed to send mail to ${email}: `, error)
+      this.logger.error(
+        `❌ Failed to send mail to ${email}: ${error.message}`,
+      )
     }
   }
 }

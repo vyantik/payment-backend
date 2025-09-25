@@ -25,24 +25,24 @@ export class PaymentHandler {
 		transactionStatus,
 		raw,
 	}: PaymentWebhookResult) {
-		await this.prismaService.$transaction(async tx => {
-			const transaction = await tx.transactions.findUnique({
-				where: {
-					id: transactionId,
-				},
-				include: {
-					subscription: {
-						include: {
-							plan: true,
-							user: true,
-						},
+		const transaction = await this.prismaService.transactions.findUnique({
+			where: {
+				id: transactionId,
+			},
+			include: {
+				subscription: {
+					include: {
+						plan: true,
+						user: true,
 					},
 				},
-			})
+			},
+		})
 
-			if (!transaction)
-				throw new NotFoundException('Transaction not found')
+		if (!transaction)
+			throw new NotFoundException('Transaction not found')
 
+		await this.prismaService.$transaction(async tx => {
 			await tx.transactions.update({
 				where: {
 					id: transaction.id,

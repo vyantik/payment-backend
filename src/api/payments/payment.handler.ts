@@ -16,7 +16,7 @@ export class PaymentHandler {
 	public constructor(
 		private readonly prismaService: PrismaService,
 		private readonly mailService: MailService,
-	) {}
+	) { }
 
 	public async processResult({
 		transactionId,
@@ -25,97 +25,107 @@ export class PaymentHandler {
 		transactionStatus,
 		raw,
 	}: PaymentWebhookResult) {
-		const transaction = await this.prismaService.transactions.findUnique({
-			where: {
-				id: transactionId,
-			},
-			include: {
-				subscription: {
-					include: {
-						plan: true,
-						user: true,
-					},
-				},
-			},
-		})
-
-		if (!transaction) throw new NotFoundException('Transaction not found')
-
-		await this.prismaService.transactions.update({
-			where: {
-				id: transaction.id,
-			},
-			data: {
-				transactionStatus,
-				externalId: paymentId,
-				providerMeta: raw,
-			},
-		})
-
-		const subscription = transaction.subscription
-
-		if (transactionStatus === TransactionStatus.SUCCESS && subscription) {
-			const now = new Date()
-			const isPlanChanged = subscription.plan.id !== planId
-
-			let baseDate: Date
-
-			if (
-				!subscription.endDate ||
-				subscription.endDate < now ||
-				isPlanChanged
-			) {
-				baseDate = new Date(now)
-			} else {
-				baseDate = new Date(subscription.endDate)
-			}
-
-			const newEndDate = new Date(baseDate)
-
-			if (transaction.billingPeriod === BillingPeriod.YEARLY)
-				newEndDate.setFullYear(newEndDate.getFullYear() + 1)
-			else {
-				const currentDay = newEndDate.getDate()
-				newEndDate.setMonth(newEndDate.getMonth() + 1)
-
-				if (newEndDate.getDate() !== currentDay) newEndDate.setDate(0)
-			}
-
-			await this.prismaService.userSubscription.update({
+		await this.prismaService.$transaction(async tx => {
+			const transaction = await tx.transactions.findUnique({
 				where: {
-					id: subscription.id,
+					id: transactionId,
 				},
-				data: {
-					status: SubscriptionStatus.ACTIVE,
-					startDate: now,
-					endDate: newEndDate,
-					plan: {
-						connect: {
-							id: planId,
+				include: {
+					subscription: {
+						include: {
+							plan: true,
+							user: true,
 						},
 					},
 				},
 			})
 
-			this.mailService.sendPaymentSuccessMail(
-				subscription.user,
-				transaction,
-			)
+			if (!transaction)
+				throw new NotFoundException('Transaction not found')
 
-			this.logger.log(`✅ Payment succeeded: ${subscription.user.email}`)
-		} else if (transactionStatus === TransactionStatus.FAILED) {
-			await this.prismaService.userSubscription.update({
+			await tx.transactions.update({
 				where: {
-					id: subscription.id,
+					id: transaction.id,
 				},
 				data: {
-					status: SubscriptionStatus.EXPIRED,
+					transactionStatus,
+					externalId: paymentId,
+					providerMeta: raw,
 				},
 			})
 
-			this.logger.error(`❌ Payment failed: ${subscription.user.email}`)
-		}
+			const subscription = transaction.subscription
 
+			if (
+				transactionStatus === TransactionStatus.SUCCESS &&
+				subscription
+			) {
+				const now = new Date()
+				const isPlanChanged = subscription.plan.id !== planId
+
+				let baseDate: Date
+
+				if (
+					!subscription.endDate ||
+					subscription.endDate < now ||
+					isPlanChanged
+				) {
+					baseDate = new Date(now)
+				} else {
+					baseDate = new Date(subscription.endDate)
+				}
+
+				const newEndDate = new Date(baseDate)
+
+				if (transaction.billingPeriod === BillingPeriod.YEARLY)
+					newEndDate.setFullYear(newEndDate.getFullYear() + 1)
+				else {
+					const currentDay = newEndDate.getDate()
+					newEndDate.setMonth(newEndDate.getMonth() + 1)
+
+					if (newEndDate.getDate() !== currentDay)
+						newEndDate.setDate(0)
+				}
+
+				await tx.userSubscription.update({
+					where: {
+						id: subscription.id,
+					},
+					data: {
+						status: SubscriptionStatus.ACTIVE,
+						startDate: now,
+						endDate: newEndDate,
+						plan: {
+							connect: {
+								id: planId,
+							},
+						},
+					},
+				})
+
+				this.mailService.sendPaymentSuccessMail(
+					subscription.user,
+					transaction,
+				)
+
+				this.logger.log(
+					`✅ Payment succeeded: ${subscription.user.email}`,
+				)
+			} else if (transactionStatus === TransactionStatus.FAILED) {
+				await tx.userSubscription.update({
+					where: {
+						id: subscription.id,
+					},
+					data: {
+						status: SubscriptionStatus.EXPIRED,
+					},
+				})
+
+				this.logger.error(
+					`❌ Payment failed: ${subscription.user.email}`,
+				)
+			}
+		})
 		return {
 			ok: true,
 		}
